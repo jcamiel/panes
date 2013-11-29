@@ -31,7 +31,7 @@ code_template = '''
 -- Author: Luis Martin Gil http://www.luismartingil.com
 -- Year : 2013
 
-tell application "iTerm 2"
+tell application "iTerm"
 
     set myPane to {}
     $items
