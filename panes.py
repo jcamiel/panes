@@ -1,5 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python2.7
 import os
+import sys
 import subprocess
 import tempfile
 from string import Template
@@ -173,9 +174,16 @@ if __name__ == '__main__':
     if args.create:
         create_default_config_file()
     else:
+        config_path = os.path.expanduser('~/.panes')
+
+        if not os.path.exists(config_path):
+            print("No config file at {0}".format(config_path))
+            print("You can create a defaut one by running panes.py -c")
+            sys.exit(0)
+            
         # Try to parse config file at ~/.panes
         config = ConfigParser.ConfigParser()
-        config.read(os.path.expanduser('~/.panes'))
+        config.read(config_path)
         try:
             panes_section = config.get(args.config, 'panes')
             panes_cfg = ast.literal_eval(panes_section )
@@ -184,7 +192,7 @@ if __name__ == '__main__':
             print("No panes defined in config {0}".format(args.config))
             pass
         except ConfigParser.NoSectionError:
-            print("No config named {0} in ~/.isession".format(args.config))
+            print("No config named {0} in ~/.panes".format(args.config))
             print("Possible configs are: {0}".format(", ".join(config.sections())))
             pass
 

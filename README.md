@@ -14,7 +14,7 @@ optional arguments:
   -c, --create  create a default config file in ~/.panes.
 ```
   
-`panes.py` is a Python script to configure an [iTerm 2][] window.
+`panes.py` is a Python 2.7+ script to configure an [iTerm 2][] window.
 `panes.py` read a configuration file at ~/.panes and create a new iTerm 2 window.
 
 Based on the configuration file, `panes.py` creates additional horizontal or vertical split panes inside this window and can launch additional cmd at the startup of the shell pane.
