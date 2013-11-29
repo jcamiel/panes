@@ -3,6 +3,7 @@ panes
 
 Configure iTerm 2 panes on OSX.
 
+```bash
 usage: panes.py [-h] [-c] [config]
 
 positional arguments:
@@ -11,6 +12,7 @@ positional arguments:
 optional arguments:
   -h, --help    show this help message and exit
   -c, --create  create a default config file in ~/.panes.
+```
   
 `panes.py` is a Python script to configure an [iTerm 2][] window.
 `panes.py` read a configuration file at ~/.panes and create a new iTerm 2 window.
