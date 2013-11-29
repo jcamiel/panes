@@ -22,7 +22,7 @@ Based on the configuration file, `panes.py` creates additional horizontal or ver
 The configuration file uses Microsoft Windows INI files format. 
 For instance, the default config file is:
 
-```ini
+```
 [Default]
 
 panes: [
