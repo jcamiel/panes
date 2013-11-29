@@ -124,7 +124,7 @@ def launch_apple_script(panes_cfg):
 
 
 default_config = """
-[Default]
+[default]
 
 panes: [
     {
@@ -166,7 +166,7 @@ def create_default_config_file():
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panesrc file', default="Default")
+    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panesrc file', default="default")
     parser.add_argument('-c', '--create', help='create a default config file in ~/.panesrc.',
                     action='store_true')
     args = parser.parse_args()

@@ -15,7 +15,7 @@ optional arguments:
 ```
   
 `panes.py` is a Python 2.7+ script to configure an [iTerm 2][] window.
-`panes.py` read a configuration file at ~/.panesrc and create a new iTerm 2 window.
+`panes.py` reads a configuration file at ~/.panesrc and creates a new iTerm 2 window.
 
 Based on the configuration file, `panes.py` creates additional horizontal or vertical split panes inside this window and can launch additional commands at the startup of the shell pane.
 
@@ -24,7 +24,7 @@ The configuration file uses Microsoft Windows INI files format. Each configurati
 For instance, the default config file is:
 
 ```
-[Default]
+[default]
 
 panes: [
     {
@@ -54,12 +54,12 @@ panes: [
     ]
 ```
 
-To launch this config, simply type `panes.py Default`or `panes.py`. This will create a new iTerm 2 window with three panes labeled 'Pane 1', 'Pane 2' and 'Pane 3'. Each pane will launch an `echo` command followed by a `ls -ltr` command. For instance, you can use it to ssh to your server and output some logs in a pane.
+To launch this config, simply type `panes.py default`or `panes.py`. This will create a new iTerm 2 window with three panes labeled 'Pane 1', 'Pane 2' and 'Pane 3'. Each pane will launch an `echo` command followed by a `ls -ltr` command. For instance, you can use it to ssh to your server and output some logs in a pane.
 
 You can add another configuration by adding this section to ~/.panesrc:
 
 ```
-[Default]
+[default]
 
 ...
 
