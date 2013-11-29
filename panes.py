@@ -127,10 +127,10 @@ default_config = """
 
 panes: [
     {
-    "name": "Tab 1",
+    "name": "Pane 1",
     "split": "v",
     "cmds": [
-        "echo tab 1",
+        "echo pane 1",
         "ls -ltr",
         ],
     },
@@ -138,15 +138,15 @@ panes: [
     "name": "Tab 2",
     "split": "h",
     "cmds": [
-        "echo tab 2",
+        "echo pane 2",
         "ls -ltr",
         ],
     },
     {
-    "name": "Tab 3",
+    "name": "Pane 3",
     "split": "h",
     "cmds": [
-        "echo tab 3",
+        "echo pane 3",
         "ls -ltr",
         ],
     },
