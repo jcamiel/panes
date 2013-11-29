@@ -154,7 +154,7 @@ panes: [
     ]
 """
 def create_default_config_file():
-    file = os.path.expanduser('~/.panes')
+    file = os.path.expanduser('~/.panesrc')
     try:
         with open(file) as f:
             print("A config file for panes.py already exist in {0}.".format(file))
@@ -166,22 +166,22 @@ def create_default_config_file():
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panes file', default="Default")
-    parser.add_argument('-c', '--create', help='create a default config file in ~/.panes.',
+    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panesrc file', default="Default")
+    parser.add_argument('-c', '--create', help='create a default config file in ~/.panesrc.',
                     action='store_true')
     args = parser.parse_args()
 
     if args.create:
         create_default_config_file()
     else:
-        config_path = os.path.expanduser('~/.panes')
+        config_path = os.path.expanduser('~/.panesrc')
 
         if not os.path.exists(config_path):
             print("No config file at {0}".format(config_path))
             print("You can create a defaut one by running panes.py -c")
             sys.exit(0)
             
-        # Try to parse config file at ~/.panes
+        # Try to parse config file at ~/.panesrc
         config = ConfigParser.ConfigParser()
         config.read(config_path)
         try:
@@ -192,7 +192,7 @@ if __name__ == '__main__':
             print("No panes defined in config {0}".format(args.config))
             pass
         except ConfigParser.NoSectionError:
-            print("No config named {0} in ~/.panes".format(args.config))
+            print("No config named {0} in {1}".format(args.config, config_path))
             print("Possible configs are: {0}".format(", ".join(config.sections())))
             pass
 
