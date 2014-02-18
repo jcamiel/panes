@@ -26,8 +26,9 @@ For instance, a default config file is:
 [Pane 1]
 
 # cmds can be multi-line and commented.
+# For each shell command, prefer single quote instead of double quote (will be corrected soon)/
 cmds = 
-	echo "pane 1"
+	echo 'pane 1'
 	ls -ltr
 	
 split = vertical
@@ -35,15 +36,15 @@ split = vertical
 [Pane 2]
 
 cmds = 
-	echo "pane 2"
+	echo 'pane 2'
 	ls -ltr
 	
 split = horizontal
 
-[Pane 2]
+[Pane 3]
 
 cmds = 
-	echo "pane 2"
+	echo 'pane 3'
 	ls -ltr
 	
 split = horizontal
