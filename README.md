@@ -7,78 +7,60 @@ Configure [iTerm 2][] panes on OSX ([more information here][]).
 usage: panes.py [-h] [-c] [config]
 
 positional arguments:
-  config        name of the iTerm 2 config in ~/.panesrc file
+  config        name of the iTerm 2 config in ~/.panesrc directory (config=django will use ~/.panesrc/django.conf)
 
 optional arguments:
   -h, --help    show this help message and exit
-  -c, --create  create a default config file in ~/.panesrc.
 ```
   
 `panes.py` is a Python 2.7+ script to configure an [iTerm 2][] window.
-`panes.py` reads a configuration file at ~/.panesrc and creates a new iTerm 2 window.
+`panes.py` reads a configuration file inside ~/.panesrc directory and creates a new iTerm 2 window. Configuration file can be organized \` à la \` Apache: if you want to open the config named django, `panes.py` will look for ~/.panesrc/django.conf.
 
 Based on the configuration file, `panes.py` creates additional horizontal or vertical split panes inside this window and can launch additional commands at the startup of the shell pane.
 
-The configuration file uses Microsoft Windows INI files format. Each configuration is described in the only file ~/.panesrc and each configuration is a section in this file.
+The configuration file uses a MySQL-like configuration file. Each configuration is described in its own file inside the ~/.panesrc directory.
  
-For instance, the default config file is:
+For instance, a default config file is:
 
 ```
-[default]
+[Pane 1]
 
-panes: [
-    {
-    "name": "Pane 1",
-    "split": "v",
-    "cmds": [
-        "echo pane 1",
-        "ls -ltr",
-        ],
-    },
-    {
-    "name": "Pane 2",
-    "split": "h",
-    "cmds": [
-        "echo pane 2",
-        "ls -ltr",
-        ],
-    },
-    {
-    "name": "Pane 3",
-    "split": "h",
-    "cmds": [
-        "echo pane 3",
-        "ls -ltr",
-        ],
-    },
-    ]
-```
+# cmds can be multi-line and commented.
+cmds = 
+	echo "pane 1"
+	ls -ltr
+	
+split = vertical
 
-To launch this config, simply type `panes.py default`or `panes.py`. This will create a new iTerm 2 window with three panes labeled 'Pane 1', 'Pane 2' and 'Pane 3'. Each pane will launch an `echo` command followed by a `ls -ltr` command. For instance, you can use it to ssh to your server and output some logs in a pane.
+[Pane 2]
 
-You can add another configuration by adding a section to `~/.panesrc`:
+cmds = 
+	echo "pane 2"
+	ls -ltr
+	
+split = horizontal
+
+[Pane 2]
+
+cmds = 
+	echo "pane 2"
+	ls -ltr
+	
+split = horizontal
+
 
 ```
-[default]
 
-...
+To launch this config, simply type `panes.py default` or `panes.py`. This will create a new iTerm 2 window with three panes labeled 'Pane 1', 'Pane 2' and 'Pane 3'. Each pane will launch an `echo` command followed by a `ls -ltr` command. For instance, you can use it to ssh to your server and output some logs in a pane.
 
-[prod]
+You can add another configuration by adding a new file inside `~/.panesrc`, for instance prod.conf:
 
-panes: [
-    {
-    "name": "Pane 1",
-    "split": "v",
-    "cmds": [
-        "ssh prod.example.com",
-        "tail -f /var/log/example.log",
-        ],
-    }
-    ]
-    
-[preprod]
+```
+[Pane 1]
 
-...
+cmds = 
+	ssh prod.example.com
+	tail -f /var/log/example.log
 
 ```
 

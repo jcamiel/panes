@@ -59,9 +59,9 @@ tell application "iTerm"
                     end repeat
                     -- Split the pane in a "D" (vertical) or "d" (horizontal) way
                     if i is less than (count of (item n of myTermWindow)) then
-                        if "h" is split of (item i of (item n of myTermWindow)) then
+                        if "horizontal" is split of (item i of (item n of myTermWindow)) then
                             set split_str to "D"
-                        else if "v" is split of (item i of (item n of myTermWindow)) then
+                        else if "vertical" is split of (item i of (item n of myTermWindow)) then
                             set split_str to "d"
                         else
                             error
@@ -79,12 +79,12 @@ end tell
 
 
 def get_pane_snippet(cmds=None, name="Default", split=None):
-    """Returns the AppleScript snippet for creating an iTerm 2 pane.
+    """Returns the AppleScript snippet to create an iTerm 2 pane.
     
     Keyword arguments:
     cmds -- the list of bash commands to execute at the start of the shell. (default None)
     name -- the name of the pane. (default "Default")
-    split -- the format of the next split pane: "h" for horizontal, "v" for vertical. (default None)
+    split -- the format of the next split pane: "horizontal" for horizontal, "vertical" for vertical. (default None)
     """
     # Compute the cmds string
     cmds_str = '","'.join(cmds)
@@ -98,21 +98,73 @@ def get_pane_snippet(cmds=None, name="Default", split=None):
     return pane
 
 
-def get_apple_script(panes_cfg):
-    """Returns the AppleScript script to configure iTerm 2.""" 
+def get_apple_script(config):
+    """Returns the AppleScript script to configure iTerm 2.
+
+    Keyword arguments:
+    config -- ConfigParser instance to transform into AppleScript.
+    """
     body = Template(code_template)
-    items_list = [get_pane_snippet(name=pane.get("name", "Default"),
-                                   cmds=pane.get("cmds", ['pwd']),
-                                   split=pane.get("split", "v"))
-                  for pane in panes_cfg]
-    items = "".join(items_list)
-    body = body.substitute(items=items)
+    panes_str = ''
+
+    # For each section of the config file, construct an AppleScript
+    # command.
+    for section in config.sections():
+        name = section
+        cmds = None
+        split = None
+
+        if config.has_option(section, 'cmds'):
+            cmds = config.get(section, 'cmds')
+            cmds = [cmd for cmd in cmds.split('\n') if cmd]
+
+        if config.has_option(section, 'split'):
+            split = config.get(section, 'split')
+
+        panes_str += get_pane_snippet(cmds, name, split)
+
+    # Inject the AppleScript command in the code template
+    body = body.substitute(items=panes_str)
     return body
 
 
-def launch_apple_script(panes_cfg):
-    """Launch the AppleScript script to configure iTerm 2."""
-    body = get_apple_script(panes_cfg)
+def launch_apple_script(conf_file):
+    """Launch the AppleScript script to configure iTerm 2.
+
+    Keyword arguments:
+    conf_file -- path of the configuration file.
+    
+    Example of a configuration file:
+    
+    [Projet]
+
+    cmds =
+        export DJANGO_SETTINGS_MODULE=example.settings.local
+        source ~/Documents/Dev/example.com/venvs/bin/activate
+        cd ~/Documents/Dev/example.com
+
+    split = vertical
+
+    [Remote]
+
+    cmds =
+        ssh dev.example.com
+        cd ~/example.com/
+        export DJANGO_SETTINGS_MODULE=example.settings.remote
+        source ~/venvs/python2.7/bin/activate
+
+    split = horizontal
+    
+    [Apache logs]
+
+    cmds =
+        ssh dev.example.com
+        tail -f /example.com/access.log
+
+    """
+    config = ConfigParser.ConfigParser()
+    config.read(conf_file)
+    body = get_apple_script(config)
 
     # Create temporary Apple script file and launch it.
     temp = tempfile.NamedTemporaryFile(delete=False)
@@ -123,78 +175,16 @@ def launch_apple_script(panes_cfg):
     os.unlink(temp.name)
 
 
-default_config = """
-[default]
-
-panes: [
-    {
-    "name": "Pane 1",
-    "split": "v",
-    "cmds": [
-        "echo pane 1",
-        "ls -ltr",
-        ],
-    },
-    {
-    "name": "Tab 2",
-    "split": "h",
-    "cmds": [
-        "echo pane 2",
-        "ls -ltr",
-        ],
-    },
-    {
-    "name": "Pane 3",
-    "split": "h",
-    "cmds": [
-        "echo pane 3",
-        "ls -ltr",
-        ],
-    },
-    ]
-"""
-def create_default_config_file():
-    file = os.path.expanduser('~/.panesrc')
-    try:
-        with open(file) as f:
-            print("A config file for panes.py already exist in {0}.".format(file))
-            print("Delete it before running panes.py -c again to recreate the default ones.")
-    except IOError:
-        with open(file, 'w') as f:
-            f.write(default_config)
- 
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panesrc file', default="default")
-    parser.add_argument('-c', '--create', help='create a default config file in ~/.panesrc.',
-                    action='store_true')
+    parser.add_argument('config', nargs='?', help='name of the iTerm 2 config in ~/.panesrc directory (config=django will uses ~/.panesrc/djanog.conf)', default='default')
     args = parser.parse_args()
 
-    if args.create:
-        create_default_config_file()
-    else:
-        config_path = os.path.expanduser('~/.panesrc')
+    config_path = os.path.expanduser('~/.panesrc/{}.conf'.format(args.config))
 
-        if not os.path.exists(config_path):
-            print("No config file at {0}".format(config_path))
-            print("You can create a defaut one by running panes.py -c")
-            sys.exit(0)
-            
-        # Try to parse config file at ~/.panesrc
-        config = ConfigParser.ConfigParser()
-        config.read(config_path)
-        try:
-            panes_section = config.get(args.config, 'panes')
-            panes_cfg = ast.literal_eval(panes_section )
-            launch_apple_script(panes_cfg)
-        except ConfigParser.NoOptionError:
-            print("No panes defined in config {0}".format(args.config))
-            pass
-        except ConfigParser.NoSectionError:
-            print("No config named {0} in {1}".format(args.config, config_path))
-            print("Possible configs are: {0}".format(", ".join(config.sections())))
-            pass
+    if not os.path.exists(config_path):
+        print("No config file at {0}".format(config_path))
+        sys.exit(0)
 
-
-
+    launch_apple_script(config_path)
