@@ -26,7 +26,7 @@ For instance, a default config file is:
 [Pane 1]
 
 # cmds can be multi-line and commented.
-# For each shell command, prefer single quote instead of double quote (will be corrected soon)/
+# For each shell command, prefer single quote instead of double quote (will be corrected soon) :/
 cmds = 
 	echo 'pane 1'
 	ls -ltr
