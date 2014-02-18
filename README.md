@@ -54,6 +54,8 @@ split = horizontal
 
 To launch this config, simply type `panes.py default` or `panes.py`. This will create a new iTerm 2 window with three panes labeled 'Pane 1', 'Pane 2' and 'Pane 3'. Each pane will launch an `echo` command followed by a `ls -ltr` command. For instance, you can use it to ssh to your server and output some logs in a pane.
 
+![iTerm 2 example](https://raw.github.com/manbolo/panes/master/panes.png)
+
 You can add another configuration by adding a new file inside `~/.panesrc`, for instance prod.conf:
 
 ```
