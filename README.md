@@ -1,6 +1,8 @@
 panes
 =====
 
+__Updated 2017-12-02__: This is a refactoring of the original program to make it work properly with modern Applescript in iTerm2.
+
 __Updated 08/16/2015__: panes is in very slow maintenance mode now. If you're looking to layout tools for iTerm, give a try to [iTermocil](https://github.com/TomAnthony/itermocil), a very new cool project.
 
 
