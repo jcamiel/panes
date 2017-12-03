@@ -23,24 +23,15 @@ def get_pane_snippet(index, cmds, name, split):
         tell item %d of sessions of current tab of myterm
             select
         end tell
+        tell current session of myterm
         ''' % index
 
+    txt += 'set name to "%s"\n' % name
+
     for cmd in cmds:
-        txt += '''
-        tell current session of myterm
-            write text "%s"
-        end tell
-        ''' % cmd
+        txt += 'write text "%s"\n' % cmd
 
-    txt += '''
-    tell current session of myterm
-        set name to "%s"
-    end tell
-    ''' % name
-
-    txt += '''
-    tell current session of myterm
-        split %s with default profile
+    txt += '''split %s with default profile
     end tell
     ''' % ("vertically" if split.startswith('v') else "horizontally")
 
