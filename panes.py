@@ -18,7 +18,7 @@ return
 '''
 
 
-def get_pane_snippet(index, cmds, name, split):
+def get_pane_snippet(index, cmds, name, split, final):
     txt = '''
         tell item %d of sessions of current tab of myterm
             select
@@ -31,9 +31,9 @@ def get_pane_snippet(index, cmds, name, split):
     for cmd in cmds:
         txt += 'write text "%s"\n' % cmd
 
-    if split:
+    if split or not final:
         txt += '''split %s with default profile
-    ''' % ("vertically" if split.startswith('v') else "horizontally")
+    ''' % ("vertically" if split and split.startswith('v') else "horizontally")
 
     txt += 'end tell\n'
 
@@ -57,7 +57,7 @@ def get_apple_script(config):
         if config.has_option(section, 'split'):
             split = config.get(section, 'split')
 
-        panes_str += get_pane_snippet(index, cmds, name, split)
+        panes_str += get_pane_snippet(index, cmds, name, split, index == len(config.sections()))
 
     # Inject the AppleScript command in the code template
     return code_template % panes_str
@@ -69,7 +69,7 @@ def launch_apple_script(conf_file):
     body = get_apple_script(config)
 
     # Create temporary Apple script file and launch it.
-    print body
+    # print body
     temp = tempfile.NamedTemporaryFile(delete=False)
     temp.write(body)
     temp.close()
