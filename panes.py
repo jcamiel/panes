@@ -31,9 +31,11 @@ def get_pane_snippet(index, cmds, name, split):
     for cmd in cmds:
         txt += 'write text "%s"\n' % cmd
 
-    txt += '''split %s with default profile
-    end tell
+    if split:
+        txt += '''split %s with default profile
     ''' % ("vertically" if split.startswith('v') else "horizontally")
+
+    txt += 'end tell\n'
 
     return txt
 
@@ -46,7 +48,7 @@ def get_apple_script(config):
         index += 1
         name = section
         cmds = []
-        split = 'horizontal'
+        split = None
 
         if config.has_option(section, 'cmds'):
             cmds = config.get(section, 'cmds')
@@ -67,6 +69,7 @@ def launch_apple_script(conf_file):
     body = get_apple_script(config)
 
     # Create temporary Apple script file and launch it.
+    print body
     temp = tempfile.NamedTemporaryFile(delete=False)
     temp.write(body)
     temp.close()
